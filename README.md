@@ -1,36 +1,45 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://github.com/vercel/next.js/tree/canary/packages/create-next-app).
+# Kodra Watches
 
-## Getting Started
+Faqe për shitje orash, ndërtuar me Next.js (App Router), Tailwind CSS dhe Vercel Blob për ruajtjen e fotove.
 
-First, run the development server:
+## Zhvillim lokal
 
-```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
-```
+1. Instalo varësitë:
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+   ```bash
+   npm install
+   ```
 
-You can start editing the page by modifying `app/page.js`. The page auto-updates as you edit the file.
+2. Kopjo `.env.local.example` në `.env.local` dhe plotëso vlerat:
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+   ```bash
+   cp .env.local.example .env.local
+   ```
 
-## Learn More
+3. Nis serverin e zhvillimit:
 
-To learn more about Next.js, take a look at the following resources:
+   ```bash
+   npm run dev
+   ```
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+## Variablat e mjedisit
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+| Variabël | Përshkrim |
+| --- | --- |
+| `BLOB_READ_WRITE_TOKEN` | Token për lexim/shkrim në Vercel Blob. |
+| `ADMIN_PASSWORD` | Fjalëkalimi për panelin e administrimit (`/admin`). |
 
-## Deploy on Vercel
+**Mos i vendos kurrë këto vlera direkt në kod** — vendosi vetëm te `.env.local` (lokalisht) ose te variablat e mjedisit në Vercel (në prodhim).
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+## Konfigurimi në Vercel
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+1. **Lidh repon** me një projekt të ri në [Vercel](https://vercel.com/new).
+2. **Krijo një Blob store**: në panelin e projektit shko te skeda **Storage** → **Create Database** → **Blob**. Pasi ta krijosh dhe ta lidhësh me projektin, Vercel do të shtojë automatikisht variablin `BLOB_READ_WRITE_TOKEN`.
+3. **Shto variablat e mjedisit**: te **Settings** → **Environment Variables**, shto:
+   - `ADMIN_PASSWORD` — zgjidh një fjalëkalim të fortë për panelin e administrimit.
+   - (`BLOB_READ_WRITE_TOKEN` zakonisht shtohet automatikisht nga lidhja me Blob store-in; verifiko që ekziston.)
+4. **Bëj deploy** (push në degën kryesore ose "Redeploy" nga paneli i Vercel).
+
+## Paneli i administrimit
+
+Faqja `/admin` lejon ngarkimin dhe menaxhimin e fotove për secilën markë (kërkohet fjalëkalimi `ADMIN_PASSWORD`). Funksionon edhe nga telefoni, duke lejuar zgjedhjen e fotove nga galeria ose kamera.
