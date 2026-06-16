@@ -19,7 +19,7 @@ export default async function BrandPage({ params }) {
       <div className="mx-auto max-w-7xl">
         <Link
           href="/"
-          className="mb-6 inline-block text-sm tracking-wide text-gold-light transition-colors hover:text-gold"
+          className="mb-8 inline-flex items-center gap-2 text-sm tracking-wide text-foreground-muted transition-colors hover:text-gold-light"
         >
           ← Kthehu
         </Link>

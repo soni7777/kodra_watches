@@ -1,15 +1,21 @@
 @import "tailwindcss";
 
 :root {
-  --background: #0a0a0a;
-  --foreground: #f5f1e8;
+  --background: #151f2e;
+  --background-card: #1c2a3e;
+  --background-hover: #223044;
+  --foreground: #f0ece3;
+  --foreground-muted: #a8b4c4;
   --gold: #c9a86a;
   --gold-light: #e3cb95;
+  --border: rgba(201, 168, 106, 0.18);
 }
 
 @theme inline {
   --color-background: var(--background);
+  --color-background-card: var(--background-card);
   --color-foreground: var(--foreground);
+  --color-foreground-muted: var(--foreground-muted);
   --color-gold: var(--gold);
   --color-gold-light: var(--gold-light);
   --font-serif: var(--font-playfair);
