@@ -2,6 +2,7 @@ import Image from "next/image";
 import Link from "next/link";
 import { brands } from "@/lib/brands";
 import { getBrandCoverImage } from "@/lib/blob";
+import VisitorCounter from "@/components/VisitorCounter";
 
 export default async function Home() {
   const covers = await Promise.all(
@@ -16,9 +17,10 @@ export default async function Home() {
             Koleksioni
           </h2>
           <div className="mx-auto mb-4 h-px w-16 bg-gold/50" />
-          <p className="mx-auto max-w-md text-foreground-muted text-sm tracking-wide">
+          <p className="mx-auto max-w-md text-foreground-muted text-sm tracking-wide mb-6">
             Zgjidh markën dhe zbulo modelet ekskluzive të disponueshme.
           </p>
+          <VisitorCounter />
         </div>
 
         <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-4">
