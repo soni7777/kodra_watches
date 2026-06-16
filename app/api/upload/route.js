@@ -24,7 +24,6 @@ export async function POST(request) {
   for (const file of files) {
     const blob = await put(`${slug}/${Date.now()}-${file.name}`, file, {
       access: "public",
-      token: process.env.BLOB_READ_WRITE_TOKEN,
     });
     uploaded.push(blob);
   }

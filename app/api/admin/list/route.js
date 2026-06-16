@@ -17,7 +17,6 @@ export async function GET(request) {
 
   const { blobs } = await list({
     prefix: slug,
-    token: process.env.BLOB_READ_WRITE_TOKEN,
     limit: 1000,
   });
 

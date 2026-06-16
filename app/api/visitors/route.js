@@ -6,9 +6,9 @@ function monthKey() {
   return `_analytics/visitors-${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, "0")}.json`;
 }
 
-async function readCount(token) {
+async function readCount() {
   try {
-    const { blobs } = await list({ prefix: "_analytics/visitors", token, limit: 12 });
+    const { blobs } = await list({ prefix: "_analytics/visitors", limit: 12 });
     const key = monthKey();
     const blob = blobs.find((b) => b.pathname === key);
     if (!blob) return 0;
@@ -21,22 +21,16 @@ async function readCount(token) {
 }
 
 export async function GET() {
-  const token = process.env.BLOB_READ_WRITE_TOKEN;
-  if (!token) return NextResponse.json({ count: 0 });
-  const count = await readCount(token);
+  const count = await readCount();
   return NextResponse.json({ count });
 }
 
 export async function POST() {
-  const token = process.env.BLOB_READ_WRITE_TOKEN;
-  if (!token) return NextResponse.json({ count: 0 });
-
-  const count = await readCount(token);
+  const count = await readCount();
   const newCount = count + 1;
 
   await put(monthKey(), JSON.stringify({ count: newCount }), {
     access: "public",
-    token,
     addRandomSuffix: false,
   });
 

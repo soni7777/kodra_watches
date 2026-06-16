@@ -12,7 +12,7 @@ export async function POST(request) {
     return NextResponse.json({ error: "Missing url" }, { status: 400 });
   }
 
-  await del(url, { token: process.env.BLOB_READ_WRITE_TOKEN });
+  await del(url);
 
   return NextResponse.json({ ok: true });
 }
