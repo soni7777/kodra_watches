@@ -6,7 +6,7 @@ export default function VisitorCounter() {
   const [count, setCount] = useState(null);
 
   useEffect(() => {
-    fetch("/api/visitors", { method: "POST" })
+    fetch("/api/visitors?page=home", { method: "POST" })
       .then((r) => r.json())
       .then((d) => setCount(d.count))
       .catch(() => {});

@@ -3,6 +3,7 @@ import { notFound } from "next/navigation";
 import { getBrandBySlug } from "@/lib/brands";
 import { getBrandImages } from "@/lib/blob";
 import Gallery from "@/components/Gallery";
+import PageTracker from "@/components/PageTracker";
 
 export default async function BrandPage({ params }) {
   const { slug } = await params;
@@ -16,6 +17,7 @@ export default async function BrandPage({ params }) {
 
   return (
     <div className="px-6 py-12 sm:px-10 lg:px-16">
+      <PageTracker page={slug} />
       <div className="mx-auto max-w-7xl">
         <Link
           href="/"
