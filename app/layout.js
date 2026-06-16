@@ -32,7 +32,7 @@ export default function RootLayout({ children }) {
             <Link href="/" className="flex items-center gap-3 group">
               <div className="relative h-12 w-12 shrink-0">
                 <Image
-                  src="/logo.png"
+                  src="/logo.jpg"
                   alt="Kodra Watches"
                   fill
                   className="object-contain"
