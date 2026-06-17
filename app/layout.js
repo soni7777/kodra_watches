@@ -39,19 +39,21 @@ export default function RootLayout({ children }) {
           className="border-b border-[var(--border)] sticky top-0 z-40 backdrop-blur-sm"
           style={{ background: "var(--background-header)" }}
         >
-          <div className="mx-auto max-w-6xl px-6 py-4 flex items-center justify-between">
-            <div className="w-9" />
-            <Link href="/" className="flex items-center gap-3 group">
-              <div className="relative h-12 w-12 shrink-0">
+          <div className="relative mx-auto max-w-6xl px-6 py-5 flex flex-col items-center gap-2">
+            <div className="absolute right-6 top-1/2 -translate-y-1/2">
+              <ThemeToggle />
+            </div>
+            <Link href="/" className="flex flex-col items-center gap-2 group">
+              <div className="relative h-16 w-16 shrink-0 overflow-hidden rounded-full border-2 border-gold/40 group-hover:border-gold transition-colors duration-300">
                 <Image
                   src="/logo.jpg"
                   alt="Kodra Watches"
                   fill
-                  className="object-contain"
+                  className="object-cover"
                   priority
                 />
               </div>
-              <div className="flex flex-col leading-tight">
+              <div className="flex flex-col items-center leading-tight">
                 <span className="font-serif text-xl sm:text-2xl tracking-[0.25em] text-gold-light group-hover:text-gold transition-colors duration-300">
                   KODRA_WATCHES
                 </span>
@@ -60,7 +62,6 @@ export default function RootLayout({ children }) {
                 </span>
               </div>
             </Link>
-            <ThemeToggle />
           </div>
         </header>
 
