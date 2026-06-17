@@ -4,6 +4,8 @@ import { brands } from "@/lib/brands";
 import { getBrandCoverImage } from "@/lib/blob";
 import VisitorCounter from "@/components/VisitorCounter";
 
+export const dynamic = "force-dynamic";
+
 export default async function Home() {
   const covers = await Promise.all(
     brands.map((brand) => getBrandCoverImage(brand.slug))
