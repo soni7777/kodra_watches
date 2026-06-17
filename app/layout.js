@@ -3,6 +3,7 @@ import Image from "next/image";
 import Link from "next/link";
 import Footer from "@/components/Footer";
 import WhatsAppFloat from "@/components/WhatsAppFloat";
+import ThemeToggle from "@/components/ThemeToggle";
 import "./globals.css";
 
 const playfair = Playfair_Display({
@@ -26,9 +27,20 @@ export default function RootLayout({ children }) {
       lang="sq"
       className={`${playfair.variable} ${inter.variable} h-full antialiased`}
     >
+      <head>
+        <script
+          dangerouslySetInnerHTML={{
+            __html: `try{var t=localStorage.getItem('theme')||'dark';document.documentElement.setAttribute('data-theme',t);}catch(e){}`,
+          }}
+        />
+      </head>
       <body className="min-h-full flex flex-col bg-background text-foreground">
-        <header className="border-b border-[var(--border)] bg-[#111824]/80 backdrop-blur-sm sticky top-0 z-40">
-          <div className="mx-auto max-w-6xl px-6 py-4 flex items-center justify-center">
+        <header
+          className="border-b border-[var(--border)] sticky top-0 z-40 backdrop-blur-sm"
+          style={{ background: "var(--background-header)" }}
+        >
+          <div className="mx-auto max-w-6xl px-6 py-4 flex items-center justify-between">
+            <div className="w-9" />
             <Link href="/" className="flex items-center gap-3 group">
               <div className="relative h-12 w-12 shrink-0">
                 <Image
@@ -48,6 +60,7 @@ export default function RootLayout({ children }) {
                 </span>
               </div>
             </Link>
+            <ThemeToggle />
           </div>
         </header>
 

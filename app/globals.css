@@ -9,6 +9,19 @@
   --gold: #c9a86a;
   --gold-light: #e3cb95;
   --border: rgba(201, 168, 106, 0.18);
+  --background-header: rgba(17, 24, 36, 0.85);
+}
+
+[data-theme="light"] {
+  --background: #f5f0e8;
+  --background-card: #fffcf7;
+  --background-hover: #ede6d8;
+  --foreground: #1c1410;
+  --foreground-muted: #7a6e62;
+  --gold: #b8903a;
+  --gold-light: #9a7530;
+  --border: rgba(184, 144, 58, 0.3);
+  --background-header: rgba(245, 240, 232, 0.92);
 }
 
 @theme inline {
@@ -26,4 +39,5 @@ body {
   background: var(--background);
   color: var(--foreground);
   font-family: var(--font-sans), Arial, Helvetica, sans-serif;
+  transition: background 0.2s, color 0.2s;
 }
