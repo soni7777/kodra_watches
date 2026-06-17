@@ -101,8 +101,8 @@ export default function AdminPage() {
       setUploadMessage(`U ngarkuan ${files.length} foto me sukses.`);
       setFiles([]);
       await loadImages(slug);
-    } catch {
-      setUploadMessage("Ngarkimi dështoi. Provo përsëri.");
+    } catch (err) {
+      setUploadMessage(`Ngarkimi dështoi: ${err?.message ?? "gabim i panjohur"}`);
     } finally {
       setUploading(false);
     }
