@@ -1,5 +1,5 @@
 import { NextResponse } from "next/server";
-import { list } from "@vercel/blob";
+import { listImages } from "@/lib/cloudinary";
 import { isAuthorized } from "@/lib/auth";
 import { brands } from "@/lib/brands";
 
@@ -15,12 +15,6 @@ export async function GET(request) {
     return NextResponse.json({ error: "Invalid brand" }, { status: 400 });
   }
 
-  const { blobs } = await list({
-    prefix: slug,
-    limit: 1000,
-  });
-
-  blobs.sort((a, b) => new Date(b.uploadedAt) - new Date(a.uploadedAt));
-
+  const blobs = await listImages(slug);
   return NextResponse.json({ blobs });
 }

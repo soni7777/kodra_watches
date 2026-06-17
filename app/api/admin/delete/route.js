@@ -1,5 +1,5 @@
 import { NextResponse } from "next/server";
-import { del } from "@vercel/blob";
+import { deleteImage } from "@/lib/cloudinary";
 import { isAuthorized } from "@/lib/auth";
 
 export async function POST(request) {
@@ -7,12 +7,11 @@ export async function POST(request) {
     return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
   }
 
-  const { url } = await request.json();
-  if (!url) {
-    return NextResponse.json({ error: "Missing url" }, { status: 400 });
+  const { public_id } = await request.json();
+  if (!public_id) {
+    return NextResponse.json({ error: "Missing public_id" }, { status: 400 });
   }
 
-  await del(url);
-
+  await deleteImage(public_id);
   return NextResponse.json({ ok: true });
 }

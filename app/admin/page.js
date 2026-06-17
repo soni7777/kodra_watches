@@ -2,7 +2,6 @@
 
 import { useEffect, useState } from "react";
 import Image from "next/image";
-import { upload as uploadToBlob } from "@vercel/blob/client";
 import { brands } from "@/lib/brands";
 
 export default function AdminPage() {
@@ -88,15 +87,26 @@ export default function AdminPage() {
     setUploadMessage("");
     try {
       for (const file of files) {
-        const safeName = file.name.replace(/\s+/g, "-");
-        const pathname = `${slug}/${Date.now()}-${safeName}`;
-        await uploadToBlob(pathname, file, {
-          access: "public",
-          handleUploadUrl: "/api/upload",
-          clientPayload: slug,
-          headers: { "x-admin-password": password },
-          multipart: true,
+        const sigRes = await fetch("/api/upload", {
+          method: "POST",
+          headers: { "Content-Type": "application/json", "x-admin-password": password },
+          body: JSON.stringify({ slug }),
         });
+        if (!sigRes.ok) throw new Error("Autorizimi dështoi");
+        const { signature, timestamp, api_key, cloud_name, folder } = await sigRes.json();
+
+        const formData = new FormData();
+        formData.append("file", file);
+        formData.append("api_key", api_key);
+        formData.append("timestamp", String(timestamp));
+        formData.append("folder", folder);
+        formData.append("signature", signature);
+
+        const uploadRes = await fetch(
+          `https://api.cloudinary.com/v1_1/${cloud_name}/image/upload`,
+          { method: "POST", body: formData }
+        );
+        if (!uploadRes.ok) throw new Error("Ngarkimi tek Cloudinary dështoi");
       }
       setUploadMessage(`U ngarkuan ${files.length} foto me sukses.`);
       setFiles([]);
@@ -108,15 +118,15 @@ export default function AdminPage() {
     }
   }
 
-  async function handleDelete(url) {
-    setDeletingUrl(url);
+  async function handleDelete(image) {
+    setDeletingUrl(image.pathname);
     try {
       const res = await fetch("/api/admin/delete", {
         method: "POST",
         headers: { "Content-Type": "application/json", "x-admin-password": password },
-        body: JSON.stringify({ url }),
+        body: JSON.stringify({ public_id: image.pathname }),
       });
-      if (res.ok) setImages((prev) => prev.filter((img) => img.url !== url));
+      if (res.ok) setImages((prev) => prev.filter((img) => img.pathname !== image.pathname));
     } finally {
       setDeletingUrl(null);
       setDeleteConfirm(null);
@@ -253,15 +263,15 @@ export default function AdminPage() {
                       />
                     </div>
                     <div className="p-2">
-                      {deleteConfirm === image.url ? (
+                      {deleteConfirm === image.pathname ? (
                         <div className="flex gap-2">
                           <button
                             type="button"
-                            onClick={() => handleDelete(image.url)}
-                            disabled={deletingUrl === image.url}
+                            onClick={() => handleDelete(image)}
+                            disabled={deletingUrl === image.pathname}
                             className="flex-1 rounded-lg bg-red-600 py-1.5 text-xs font-semibold text-white hover:bg-red-500 disabled:opacity-50"
                           >
-                            {deletingUrl === image.url ? "..." : "Konfirmo"}
+                            {deletingUrl === image.pathname ? "..." : "Konfirmo"}
                           </button>
                           <button
                             type="button"
@@ -274,7 +284,7 @@ export default function AdminPage() {
                       ) : (
                         <button
                           type="button"
-                          onClick={() => setDeleteConfirm(image.url)}
+                          onClick={() => setDeleteConfirm(image.pathname)}
                           className="w-full rounded-lg border border-red-500/40 py-1.5 text-xs font-semibold text-red-400 transition-colors hover:bg-red-500/10 hover:border-red-400"
                         >
                           🗑 Fshi foton

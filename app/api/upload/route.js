@@ -1,42 +1,18 @@
 import { NextResponse } from "next/server";
-import { handleUpload } from "@vercel/blob/client";
+import { generateSignature } from "@/lib/cloudinary";
 import { isAuthorized } from "@/lib/auth";
 import { brands } from "@/lib/brands";
 
 export async function POST(request) {
-  const body = await request.json();
-
-  try {
-    const jsonResponse = await handleUpload({
-      body,
-      request,
-      onBeforeGenerateToken: async (pathname, clientPayload) => {
-        if (!isAuthorized(request)) {
-          throw new Error("Unauthorized");
-        }
-        const slug = clientPayload;
-        if (!brands.some((brand) => brand.slug === slug)) {
-          throw new Error("Invalid brand");
-        }
-        return {
-          allowedContentTypes: [
-            "image/jpeg",
-            "image/png",
-            "image/webp",
-            "image/heic",
-            "image/heif",
-            "image/gif",
-          ],
-          tokenPayload: slug,
-        };
-      },
-      onUploadCompleted: async () => {
-        // no post-upload processing needed
-      },
-    });
-
-    return NextResponse.json(jsonResponse);
-  } catch (error) {
-    return NextResponse.json({ error: error.message }, { status: 400 });
+  if (!isAuthorized(request)) {
+    return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
   }
+
+  const { slug } = await request.json();
+
+  if (!brands.some((brand) => brand.slug === slug)) {
+    return NextResponse.json({ error: "Invalid brand" }, { status: 400 });
+  }
+
+  return NextResponse.json(generateSignature(slug));
 }
