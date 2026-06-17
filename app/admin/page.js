@@ -207,7 +207,6 @@ export default function AdminPage() {
               <input
                 type="file"
                 accept="image/*"
-                capture="environment"
                 multiple
                 onChange={(e) => setFiles(Array.from(e.target.files ?? []))}
                 className="mb-4 w-full rounded-lg border border-gold/30 bg-black/60 px-4 py-3 text-sm text-foreground/80 file:mr-4 file:rounded file:border-0 file:bg-gold file:px-4 file:py-2 file:font-medium file:text-black"
