@@ -1,32 +1,42 @@
 import { NextResponse } from "next/server";
-import { put } from "@vercel/blob";
+import { handleUpload } from "@vercel/blob/client";
 import { isAuthorized } from "@/lib/auth";
 import { brands } from "@/lib/brands";
 
 export async function POST(request) {
-  if (!isAuthorized(request)) {
-    return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
-  }
+  const body = await request.json();
 
-  const formData = await request.formData();
-  const slug = formData.get("slug");
-  const files = formData.getAll("files");
-
-  if (!brands.some((brand) => brand.slug === slug)) {
-    return NextResponse.json({ error: "Invalid brand" }, { status: 400 });
-  }
-
-  if (files.length === 0) {
-    return NextResponse.json({ error: "No files provided" }, { status: 400 });
-  }
-
-  const uploaded = [];
-  for (const file of files) {
-    const blob = await put(`${slug}/${Date.now()}-${file.name}`, file, {
-      access: "public",
+  try {
+    const jsonResponse = await handleUpload({
+      body,
+      request,
+      onBeforeGenerateToken: async (pathname, clientPayload) => {
+        if (!isAuthorized(request)) {
+          throw new Error("Unauthorized");
+        }
+        const slug = clientPayload;
+        if (!brands.some((brand) => brand.slug === slug)) {
+          throw new Error("Invalid brand");
+        }
+        return {
+          allowedContentTypes: [
+            "image/jpeg",
+            "image/png",
+            "image/webp",
+            "image/heic",
+            "image/heif",
+            "image/gif",
+          ],
+          tokenPayload: slug,
+        };
+      },
+      onUploadCompleted: async () => {
+        // no post-upload processing needed
+      },
     });
-    uploaded.push(blob);
-  }
 
-  return NextResponse.json({ ok: true, uploaded });
+    return NextResponse.json(jsonResponse);
+  } catch (error) {
+    return NextResponse.json({ error: error.message }, { status: 400 });
+  }
 }

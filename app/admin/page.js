@@ -2,6 +2,7 @@
 
 import { useEffect, useState } from "react";
 import Image from "next/image";
+import { upload as uploadToBlob } from "@vercel/blob/client";
 import { brands } from "@/lib/brands";
 
 export default function AdminPage() {
@@ -86,21 +87,20 @@ export default function AdminPage() {
     setUploading(true);
     setUploadMessage("");
     try {
-      const formData = new FormData();
-      formData.append("slug", slug);
-      for (const file of files) formData.append("files", file);
-      const res = await fetch("/api/upload", {
-        method: "POST",
-        headers: { "x-admin-password": password },
-        body: formData,
-      });
-      if (res.ok) {
-        setUploadMessage(`U ngarkuan ${files.length} foto me sukses.`);
-        setFiles([]);
-        await loadImages(slug);
-      } else {
-        setUploadMessage("Ngarkimi dështoi. Provo përsëri.");
+      for (const file of files) {
+        const safeName = file.name.replace(/\s+/g, "-");
+        const pathname = `${slug}/${Date.now()}-${safeName}`;
+        await uploadToBlob(pathname, file, {
+          access: "public",
+          handleUploadUrl: "/api/upload",
+          clientPayload: slug,
+          headers: { "x-admin-password": password },
+          multipart: true,
+        });
       }
+      setUploadMessage(`U ngarkuan ${files.length} foto me sukses.`);
+      setFiles([]);
+      await loadImages(slug);
     } catch {
       setUploadMessage("Ngarkimi dështoi. Provo përsëri.");
     } finally {
@@ -207,10 +207,14 @@ export default function AdminPage() {
               <input
                 type="file"
                 accept="image/*"
+                capture="environment"
                 multiple
                 onChange={(e) => setFiles(Array.from(e.target.files ?? []))}
                 className="mb-4 w-full rounded-lg border border-gold/30 bg-black/60 px-4 py-3 text-sm text-foreground/80 file:mr-4 file:rounded file:border-0 file:bg-gold file:px-4 file:py-2 file:font-medium file:text-black"
               />
+              <p className="mb-4 text-xs text-foreground-muted">
+                Zgjidhni foto nga galeria tuaj ose përdorni kamerën e telefonit.
+              </p>
 
               <button
                 type="submit"
