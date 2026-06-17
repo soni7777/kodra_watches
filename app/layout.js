@@ -60,7 +60,7 @@ export default function RootLayout({ children }) {
                   KODRA_WATCHES
                 </span>
                 <span className="text-[10px] tracking-[0.4em] text-foreground-muted uppercase">
-                  Shitje Online
+                  Not For Sale
                 </span>
               </div>
             </Link>
