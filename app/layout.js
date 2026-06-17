@@ -4,6 +4,8 @@ import Link from "next/link";
 import Footer from "@/components/Footer";
 import WhatsAppFloat from "@/components/WhatsAppFloat";
 import ThemeToggle from "@/components/ThemeToggle";
+import AnnouncementBanner from "@/components/AnnouncementBanner";
+import { Suspense } from "react";
 import "./globals.css";
 
 const playfair = Playfair_Display({
@@ -65,6 +67,9 @@ export default function RootLayout({ children }) {
           </div>
         </header>
 
+        <Suspense fallback={null}>
+          <AnnouncementBanner />
+        </Suspense>
         <main className="flex flex-1 flex-col">{children}</main>
 
         <Footer />

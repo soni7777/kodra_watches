@@ -24,6 +24,11 @@ export default function AdminPage() {
   const [stats, setStats] = useState(null);
   const [loadingStats, setLoadingStats] = useState(false);
 
+  const [announcementText, setAnnouncementText] = useState("");
+  const [announcementActive, setAnnouncementActive] = useState(false);
+  const [announcementSaving, setAnnouncementSaving] = useState(false);
+  const [announcementMsg, setAnnouncementMsg] = useState("");
+
   async function handleLogin(e) {
     e.preventDefault();
     setAuthError("");
@@ -79,6 +84,41 @@ export default function AdminPage() {
     if (authed && activeTab === "stats" && !stats) loadStats();
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [authed, activeTab]);
+
+  useEffect(() => {
+    if (authed && activeTab === "announcement") loadAnnouncement();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [authed, activeTab]);
+
+  async function loadAnnouncement() {
+    try {
+      const res = await fetch("/api/admin/announcement", {
+        headers: { "x-admin-password": password },
+      });
+      if (res.ok) {
+        const data = await res.json();
+        setAnnouncementText(data.text ?? "");
+        setAnnouncementActive(data.active ?? false);
+      }
+    } catch {}
+  }
+
+  async function saveAnnouncement() {
+    setAnnouncementSaving(true);
+    setAnnouncementMsg("");
+    try {
+      const res = await fetch("/api/admin/announcement", {
+        method: "POST",
+        headers: { "Content-Type": "application/json", "x-admin-password": password },
+        body: JSON.stringify({ text: announcementText, active: announcementActive }),
+      });
+      setAnnouncementMsg(res.ok ? "U ruajt me sukses." : "Gabim gjatë ruajtjes.");
+    } catch {
+      setAnnouncementMsg("Gabim gjatë ruajtjes.");
+    } finally {
+      setAnnouncementSaving(false);
+    }
+  }
 
   async function handleUpload(e) {
     e.preventDefault();
@@ -177,6 +217,7 @@ export default function AdminPage() {
           {[
             { key: "upload", label: "Ngarko / Fshi Foto" },
             { key: "stats", label: "Statistika" },
+            { key: "announcement", label: "Lajmërim" },
           ].map((tab) => (
             <button
               key={tab.key}
@@ -364,6 +405,68 @@ export default function AdminPage() {
               </div>
             )}
           </>
+        )}
+
+        {/* ── TAB: LAJMËRIM ── */}
+        {activeTab === "announcement" && (
+          <div className="rounded-xl border border-gold/20 bg-background-card p-6">
+            <div className="mb-6 flex items-center justify-between">
+              <h3 className="font-serif text-xl text-foreground">Lajmërim</h3>
+              <label className="flex cursor-pointer items-center gap-2">
+                <span className="text-sm text-foreground-muted">
+                  {announcementActive ? "Aktiv" : "Joaktiv"}
+                </span>
+                <div
+                  onClick={() => setAnnouncementActive((v) => !v)}
+                  className={`relative h-6 w-11 rounded-full transition-colors ${
+                    announcementActive ? "bg-gold" : "bg-white/20"
+                  }`}
+                >
+                  <span
+                    className={`absolute top-0.5 h-5 w-5 rounded-full bg-white shadow transition-transform ${
+                      announcementActive ? "translate-x-5" : "translate-x-0.5"
+                    }`}
+                  />
+                </div>
+              </label>
+            </div>
+
+            {announcementText.trim() && (
+              <div
+                className={`mb-5 rounded-lg border px-4 py-3 text-center text-sm font-medium transition-colors ${
+                  announcementActive
+                    ? "border-gold/30 bg-gold/10 text-gold-light"
+                    : "border-white/10 bg-white/5 text-foreground-muted"
+                }`}
+              >
+                {announcementText}
+                {!announcementActive && (
+                  <span className="ml-2 text-xs opacity-60">(joaktiv)</span>
+                )}
+              </div>
+            )}
+
+            <textarea
+              value={announcementText}
+              onChange={(e) => setAnnouncementText(e.target.value)}
+              placeholder="Shkruaj lajmërimin këtu... p.sh. 'Ofertë speciale këtë javë!'"
+              rows={3}
+              className="mb-4 w-full resize-none rounded-lg border border-gold/30 bg-black/40 px-4 py-3 text-sm text-foreground placeholder:text-foreground/30 focus:border-gold focus:outline-none"
+            />
+
+            <button
+              type="button"
+              onClick={saveAnnouncement}
+              disabled={announcementSaving}
+              className="w-full rounded-lg bg-gold px-4 py-3 font-medium text-black transition-colors hover:bg-gold-light disabled:opacity-50"
+            >
+              {announcementSaving ? "Duke ruajtur..." : "Ruaj lajmërimin"}
+            </button>
+
+            {announcementMsg && (
+              <p className="mt-3 text-center text-sm text-gold-light">{announcementMsg}</p>
+            )}
+          </div>
         )}
       </div>
     </div>
