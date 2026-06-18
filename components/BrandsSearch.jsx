@@ -39,7 +39,7 @@ export default function BrandsSearch({ items }) {
         </p>
       ) : (
         <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-4">
-          {filtered.map(({ brand, coverUrl }) => (
+          {filtered.map(({ brand, coverUrl, count }) => (
             <Link
               key={brand.slug}
               href={`/brand/${brand.slug}`}
@@ -58,6 +58,11 @@ export default function BrandsSearch({ items }) {
                   <span className="px-4 text-center font-serif text-xl tracking-[0.2em] text-gold/60">
                     {brand.name}
                   </span>
+                </div>
+              )}
+              {count > 0 && (
+                <div className="absolute top-3 right-3 rounded-full bg-black/70 border border-gold/30 px-2.5 py-1 text-xs font-semibold text-gold-light backdrop-blur-sm">
+                  {count} orë
                 </div>
               )}
               <div className="absolute inset-x-0 bottom-0 bg-gradient-to-t from-black/95 via-black/50 to-transparent p-5">

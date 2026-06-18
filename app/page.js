@@ -1,16 +1,20 @@
 import { brands } from "@/lib/brands";
-import { getBrandCoverImage } from "@/lib/blob";
+import { getBrandImages } from "@/lib/blob";
 import VisitorCounter from "@/components/VisitorCounter";
 import BrandsSearch from "@/components/BrandsSearch";
 
 export const dynamic = "force-dynamic";
 
 export default async function Home() {
-  const covers = await Promise.all(
-    brands.map((brand) => getBrandCoverImage(brand.slug))
+  const allImages = await Promise.all(
+    brands.map((brand) => getBrandImages(brand.slug))
   );
 
-  const items = brands.map((brand, i) => ({ brand, coverUrl: covers[i] }));
+  const items = brands.map((brand, i) => ({
+    brand,
+    coverUrl: allImages[i][0]?.url ?? null,
+    count: allImages[i].length,
+  }));
 
   return (
     <div className="px-6 py-16 sm:px-10 lg:px-16">
