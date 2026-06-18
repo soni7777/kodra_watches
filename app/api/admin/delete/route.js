@@ -12,6 +12,11 @@ export async function POST(request) {
     return NextResponse.json({ error: "Missing public_id" }, { status: 400 });
   }
 
-  await deleteImage(public_id);
+  try {
+    await deleteImage(public_id);
+  } catch (err) {
+    console.error("Delete error:", err?.message);
+    return NextResponse.json({ error: err?.message ?? "Delete failed" }, { status: 500 });
+  }
   return NextResponse.json({ ok: true });
 }
