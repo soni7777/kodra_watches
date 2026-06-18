@@ -33,6 +33,13 @@ export default function Footer() {
         <p className="text-[var(--foreground-muted)] text-xs tracking-widest uppercase">
           © {new Date().getFullYear()} Kodra Watches — Të gjitha të drejtat e rezervuara
         </p>
+
+        <a
+          href="/admin"
+          className="text-[10px] tracking-widest text-[var(--foreground-muted)]/30 uppercase hover:text-[var(--foreground-muted)]/60 transition-colors"
+        >
+          admin
+        </a>
       </div>
     </footer>
   );
