@@ -67,7 +67,7 @@ export default function BrandsSearch({ items }) {
               )}
               <div className="absolute inset-x-0 bottom-0 bg-gradient-to-t from-black/95 via-black/50 to-transparent p-3 sm:p-5">
                 <h3 className="font-serif text-sm tracking-wide text-gold-light transition-colors duration-300 group-hover:text-gold sm:text-lg">
-                  {brand.name}
+                  {brand.name} Katalog
                 </h3>
               </div>
             </Link>
