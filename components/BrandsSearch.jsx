@@ -62,7 +62,7 @@ export default function BrandsSearch({ items }) {
               )}
               {count > 0 && (
                 <div className="absolute top-2 right-2 rounded-full bg-black/70 border border-gold/30 px-2 py-0.5 text-[10px] font-semibold text-gold-light backdrop-blur-sm sm:top-3 sm:right-3 sm:px-2.5 sm:py-1 sm:text-xs">
-                  {count} orë
+                  {count} items
                 </div>
               )}
               <div className="absolute inset-x-0 bottom-0 bg-gradient-to-t from-black/95 via-black/50 to-transparent p-3 sm:p-5">
