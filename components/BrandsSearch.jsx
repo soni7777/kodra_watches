@@ -38,7 +38,7 @@ export default function BrandsSearch({ items }) {
           Asnjë markë nuk u gjet.
         </p>
       ) : (
-        <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-4">
+        <div className="grid grid-cols-2 gap-3 sm:grid-cols-3 lg:grid-cols-4">
           {filtered.map(({ brand, coverUrl, count }) => (
             <Link
               key={brand.slug}
@@ -61,12 +61,12 @@ export default function BrandsSearch({ items }) {
                 </div>
               )}
               {count > 0 && (
-                <div className="absolute top-3 right-3 rounded-full bg-black/70 border border-gold/30 px-2.5 py-1 text-xs font-semibold text-gold-light backdrop-blur-sm">
+                <div className="absolute top-2 right-2 rounded-full bg-black/70 border border-gold/30 px-2 py-0.5 text-[10px] font-semibold text-gold-light backdrop-blur-sm sm:top-3 sm:right-3 sm:px-2.5 sm:py-1 sm:text-xs">
                   {count} orë
                 </div>
               )}
-              <div className="absolute inset-x-0 bottom-0 bg-gradient-to-t from-black/95 via-black/50 to-transparent p-5">
-                <h3 className="font-serif text-lg tracking-wide text-gold-light transition-colors duration-300 group-hover:text-gold sm:text-xl">
+              <div className="absolute inset-x-0 bottom-0 bg-gradient-to-t from-black/95 via-black/50 to-transparent p-3 sm:p-5">
+                <h3 className="font-serif text-sm tracking-wide text-gold-light transition-colors duration-300 group-hover:text-gold sm:text-lg">
                   {brand.name}
                 </h3>
               </div>
